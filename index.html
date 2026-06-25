@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VENENO BRASILEIRO | PANEL BAN</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Creepster&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- GSAP Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --blood-red: #ff0000;
+            --dark-bg: #0a0a0a;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Proteksi: Tidak bisa copy teks */
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .terminal-font { font-family: 'JetBrains Mono', monospace; }
+        .scary-font { font-family: 'Creepster', cursive; }
+
+        /* Custom Input Styling */
+        input:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            border-color: var(--neon-green) !important;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+            animation: glitch 2s infinite linear alternate-reverse;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 red, -2px 0 blue; }
+            50% { text-shadow: -2px 0 red, 2px 0 blue; }
+            100% { text-shadow: 2px 0 red, -2px 0 blue; }
+        }
+
+        /* Android Dialog Style */
+        .android-dialog {
+            background: #212121;
+            border-radius: 4px;
+            box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14), 0 9px 46px 8px rgba(0,0,0,0.12), 0 11px 15px -7px rgba(0,0,0,0.2);
+            width: 85%;
+            max-width: 320px;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #9e9e9e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .radio-active .radio-circle {
+            border-color: #00bcd4;
+        }
+
+        .radio-active .radio-inner {
+            width: 10px;
+            height: 10px;
+            background: #00bcd4;
+            border-radius: 50%;
+        }
+
+        /* Scanline Overlay */
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="scanline"></div>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-page" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-8 transition-all duration-500">
+        <div class="text-center mb-10">
+            <h1 class="scary-font text-6xl text-red-600 glitch">VENENO</h1>
+            <p class="text-[10px] tracking-[0.3em] text-zinc-500">SISTEM OTORISASI</p>
+        </div>
+
+        <div class="w-full max-w-sm space-y-4">
+            <div class="relative">
+                <input type="text" id="username" placeholder="Username" 
+                    class="w-full bg-zinc-900/50 border border-zinc-800 p-4 rounded-lg text-white focus:outline-none transition-all placeholder:text-zinc-600">
+            </div>
+            <div class="relative">
+                <input type="password" id="password"placeholder="Password" 
+                    class="w-full bg-zinc-900/50 border border-zinc-800 p-4 rounded-lg text-white focus:outline-none transition-all placeholder:text-zinc-600">
+            </div>
+            <button onclick="handleLogin()" class="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-4 rounded-lg shadow-lg shadow-red-900/20 active:scale-95 transition-all">
+                LOGIN
+            </button>
+        </div>
+        
+        <p class="absolute bottom-10 text-[10px] text-zinc-700 italic">Credits: @SisuryaOfficial</p>
+    </div>
+
+    <!-- 2. MAIN DASHBOARD -->
+    <div id="main-app" class="hidden opacity-0 flex flex-col min-h-screen p-6 max-w-md mx-auto">
+        
+        <!-- Header -->
+        <header class="text-center py-6">
+            <h2 class="scary-font text-4xl text-green-500 mb-1">VENENO BRASILEIRO</h2>
+            <div class="flex items-center justify-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+                <span class="text-[10px] terminal-font uppercase opacity-60">Server: SAO PAULO [AKTIF]</span>
+            </div>
+        </header>
+
+        <!-- Form Panel -->
+        <div class="space-y-6 mt-4">
+            <!-- Target Input -->
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Nomor Target (Format Int.)</label>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-1 flex items-center">
+                    <div class="bg-zinc-800 px-3 py-2 rounded-md text-sm font-bold text-zinc-400">+</div>
+                    <input type="number" id="target-number" placeholder="628xxx" 
+                        class="bg-transparent w-full p-3 text-white focus:outline-none text-lg font-bold terminal-font">
+                </div>
+            </div>
+
+            <!-- Custom Method Selector Trigger -->
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Metode Ban</label>
+                <div onclick="openModal()" class="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-lg flex justify-between items-center active:bg-zinc-800 transition-colors cursor-pointer">
+                    <span id="selected-method-text" class="text-white text-sm">Pilih Metode...</span>
+                    <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+
+            <button onclick="startExecution()" class="w-full py-4 mt-4 bg-green-600 hover:bg-green-500 text-black font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-green-900/20 active:scale-95">
+                EKSEKUSI TARGET
+            </button>
+        </div>
+
+        <!-- Terminal Console -->
+        <div id="console-box" class="hidden flex-grow mt-8 flex flex-col">
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-[10px] font-bold text-red-500 uppercase">System Logs</span>
+                <span id="progress-val" class="text-[10px] terminal-font">0%</span>
+            </div>
+            <div id="terminal" class="bg-black/80 border border-zinc-800 rounded-lg p-4 flex-grow overflow-y-auto max-h-[300px] terminal-font text-[11px] leading-relaxed space-y-1">
+                <!-- Logs entry -->
+            </div>
+        </div>
+
+        <footer class="mt-auto py-8 text-center text-[10px] text-zinc-600 tracking-widest">
+            PANEL VERSI 4.0.8 &copy; 2024 SISURYA
+        </footer>
+    </div>
+
+    <!-- 3. ANDROID STYLE MODAL (BUATAN CUSTOM) -->
+    <div id="modal-overlay" class="fixed inset-0 z-[110] bg-black/80 hidden items-center justify-center opacity-0">
+        <div class="android-dialog flex flex-col">
+            <div class="p-6">
+                <h3 class="text-white text-xl font-medium mb-4">Pilih Metode</h3>
+                
+                <div class="space-y-4">
+                    <!-- Option 1 -->
+                    <div onclick="selectMethod(0, 'Bypass 1 Jam (Sementara)')" class="flex items-center gap-4 cursor-pointer method-option">
+                        <div class="radio-circle"><div class="radio-inner"></div></div>
+                        <span class="text-zinc-300">Bypass 1 Jam (Sementara)</span>
+                    </div>
+                    <!-- Option 2 -->
+                    <div onclick="selectMethod(1, 'Hard Ban (Permanen)')" class="flex items-center gap-4 cursor-pointer method-option">
+                        <div class="radio-circle"><div class="radio-inner"></div></div>
+                        <span class="text-zinc-300">Hard Ban (Permanen)</span>
+                    </div>
+                    <!-- Option 3 -->
+                    <div onclick="selectMethod(2, 'Spam Tak Terbatas (Trava Zap)')" class="flex items-center gap-4 cursor-pointer method-option">
+                        <div class="radio-circle"><div class="radio-inner"></div></div>
+                        <span class="text-zinc-300">Spam Tak Terbatas (Trava Zap)</span>
+                    </div>
+                    <!-- Option 4 -->
+                    <div onclick="selectMethod(3, 'Reset Akun / Logout Paksa')" class="flex items-center gap-4 cursor-pointer method-option">
+                        <div class="radio-circle"><div class="radio-inner"></div></div>
+                        <span class="text-zinc-300">Reset Akun / Logout Paksa</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end p-2 gap-4">
+                <button onclick="closeModal()" class="text-teal-500 font-bold px-4 py-2 uppercase text-sm active:bg-white/5 rounded">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedIdx = -1;
+
+        // --- AUTH LOGIC ---
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if(user === "YOGADEV" && pass === "YOGADEV") {
+                gsap.to("#login-page", {
+                    opacity: 0,
+                    y: -50,
+                    duration: 0.8,
+                    onComplete: () => {
+                        document.getElementById('login-page').classList.add('hidden');
+                        document.getElementById('main-app').classList.remove('hidden');
+                        gsap.to("#main-app", { opacity: 1, duration: 0.5 });
+                    }
+                });
+            } else {
+                gsap.to("#login-page", { x: 10, repeat: 5, yoyo: true, duration: 0.05 });
+                alert("Otorisasi Gagal! Periksa kembali kredensial Anda.");
+            }
+        }
+
+        // --- MODAL LOGIC (Android Native Feel) ---
+        function openModal() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            gsap.to(overlay, { opacity: 1, duration: 0.3 });
+            gsap.from(".android-dialog", { scale: 0.8, opacity: 0, duration: 0.3, ease: "back.out(1.7)" });
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            gsap.to(overlay, { 
+                opacity: 0, 
+                duration: 0.2, 
+                onComplete: () => {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                } 
+            });
+        }
+
+        function selectMethod(idx, text) {
+            selectedIdx = idx;
+            document.getElementById('selected-method-text').innerText = text;
+            document.getElementById('selected-method-text').classList.add('text-green-500');
+            
+            // UI Radio Update
+            const options = document.querySelectorAll('.method-option');
+            options.forEach((opt, i) => {
+                if(i === idx) opt.classList.add('radio-active');
+                else opt.classList.remove('radio-active');
+            });
+
+            setTimeout(closeModal, 200);
+        }
+
+        // --- EXECUTION LOGIC ---
+        const fakeLogs = [
+            "Memulai handshake dengan server Brazil...",
+            "Mengalihkan IP melalui proxy Sao Paulo...",
+            "Injeksi payload bypass Meta v14.2...",
+            "Mengidentifikasi database target...",
+            "Target ditemukan: [MENGEKSTRAKSI DATA]",
+            "Mengirimkan 50.000 laporan palsu...",
+            "Memicu sensor keamanan WhatsApp...",
+            "Menghapus sesi login aktif...",
+            "Memalsukan aktivitas ilegal pada akun...",
+            "Sinkronisasi dengan botnet Veneno...",
+            "Mengirim paket terminasi akun...",
+            "STATUS: Alun berhasil dinonaktifkan permanen."
+        ];
+
+        async function startExecution() {
+            const num = document.getElementById('target-number').value;
+            if(!num) return alert("Masukkan nomor target!");
+            if(selectedIdx === -1) return alert("Pilih metode ban dulu!");
+
+            document.getElementById('console-box').classList.remove('hidden');
+            const term = document.getElementById('terminal');
+            const prog = document.getElementById('progress-val');
+            term.innerHTML = "";
+
+            for(let i = 0; i < fakeLogs.length; i++) {
+                const delay = Math.random() * 800 + 400;
+                await new Promise(r => setTimeout(r, delay));
+                
+                const line = document.createElement('div');
+                line.className = i === fakeLogs.length - 1 ? 'text-red-500 font-bold' : 'text-green-500';
+                line.innerHTML = `<span class="text-zinc-600">[${new Date().toLocaleTimeString()}]</span> > ${fakeLogs[i]}`;
+                term.appendChild(line);
+                term.scrollTop = term.scrollHeight;
+
+                prog.innerText = `${Math.round(((i+1)/fakeLogs.length)*100)}%`;
+                
+                // Shake effect on 80%
+                if(i === Math.floor(fakeLogs.length * 0.8)) {
+                    gsap.to("body", { backgroundColor: "#200", duration: 0.1, yoyo: true, repeat: 3 });
+                }
+            }
+            
+            gsap.to(term, { boxShadow: "0 0 20px rgba(255,0,0,0.5)", duration: 0.5 });
+        }
+    </script>
+</body>
+</html>
+
